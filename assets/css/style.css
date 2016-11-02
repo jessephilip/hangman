@@ -5,3 +5,8 @@
 #result {
 	font-size: 100px;
 }
+
+#image {
+	position: absolute;
+	margin-left: 550px;
+}

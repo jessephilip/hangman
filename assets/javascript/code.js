@@ -43,7 +43,8 @@ document.onkeyup = function(event) {
 		document.querySelector("#used").innerHTML = "Used Letters: " + choices.toString();
 		if (word.indexOf(userInput) == -1) {
 			guessCount++;
-			document.querySelector("#misses").innerHTML = "Misses: " + guessCount;			
+			document.querySelector("#misses").innerHTML = "Misses: " + guessCount;
+			document.querySelector("#image").src = "assets/images/easy/scaffold-" + guessCount + ".png";
 		}
 		if (guessCount == 13) document.querySelector("#result").innerHTML = "YOU LOSE";
 	}	
