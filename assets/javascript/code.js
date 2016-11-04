@@ -22,7 +22,7 @@ var dictionary = [
     { word: "magic", definition: "gathers things" },
     { word: "twelve", definition: "comes after eleven" },
     { word: "loop", definition: "for, while, do while" },
-    { word: "aliens", definition: "<img src='assets/images/aliens.png' alt='xenomorph cute'>" },
+    { word: "aliens", definition: "<img src='assets/images/aliens.jpg' height='150px' width='150px' alt='xenomorph cute'>" },
     { word: "fire", definition: "<img src='assets/images/fireElemental.png' alt='fire elemental'>" },
     { word: "words", definition: "some people have the best words" },
     { word: "pizza", definition: "the fifth element" },
@@ -30,13 +30,21 @@ var dictionary = [
     { word: "billion", definition: "bigger than 1" },
     { word: "hope", definition: "she slapped me once" },
     { word: "code", definition: "&uarr; &uarr; &darr; &darr; &larr; &rarr; &larr; &rarr; b a start" },
-    { word: "shark", definition: "shark" },
-    { word: "horse", definition: "horse" },
-    { word: "paternal", definition: "paternal" },
-    { word: "math", definition: "math" },
+    { word: "shark", definition: "big fish with teeth" },
+    { word: "horse", definition: "yelling too much" },
+    { word: "paternal", definition: "fondness for DNA donations" },
+    { word: "math", definition: "2 + 2 = 5" },
+    { word: "box", definition: "beware the most innerest" },
+    { word: "drama", definition: "that class you took in high school" },
+    { word: "flight", definition: "the process of leaving the ground" },
+    { word: "chill", definition: "works with Netflix" },
+    { word: "caring", definition: "is sharing" },
+    { word: "ignorance", definition: "rhymes with fignorance" },
+    { word: "victory", definition: "rides on a white stallion" },
     { word: "roof", definition: "raise it" }
 
 ];
+
 // easy mode would have 13 guesses
 // 13 original guesses. do not count letters already tried.
 // generate a random word for the user to guess
@@ -64,134 +72,138 @@ var guessLimit = 13;
 // score tracks the overall score of all games
 var score = 0;
 
+// variable for locking the game after the player wins or loses
+var gameLock = false;
+
 //initiage the game with a random word and the correct number of spaces
 setSpaces(getWord());
 
 // document.onkeyup listens for the user's input
 document.onkeyup = function(event) {
+//console.log(event);
     var userInput = String.fromCharCode(event.keyCode).toLowerCase();
 
-    //return an alert and do not log the user input if it has already been attempted.
-    if (choices.indexOf(userInput) >= 0) {
-        alert("Letter already used.");
-    }
+    if ((event.keyCode >= 65) && (event.keyCode <= 90) && (gameLock == false))  {
 
-    //put user's input into an array and print that to the screen.
-    else {
-        choices.push(userInput);
-        document.querySelector("#used").innerHTML = "Used Letters: " + choices.toString();
+        //turn color of #message black for style
+        document.querySelector("#message").style.color = "gray"; 
+
+        //return an alert and do not log the user input if it has already been attempted.
+        if (choices.indexOf(userInput) >= 0) {
+            alert("Letter already used.");
+        }
+
+        //put user's input into an array and print that to the screen.
+        else {
+            choices.push(userInput);
+            document.querySelector("#used").innerHTML = "Used Letters: " + choices.toString();
+            
+            // userInput is not in the word guessCount goes up and the game could end
+            if (word.indexOf(userInput) == -1) {
+                guessCount++;
+                document.querySelector("#misses").innerHTML = "Misses: " + guessCount + "/" + guessLimit;
+                document.querySelector("#image").src = "assets/images/easy/clean/scaffold-" + guessCount + ".png";
+            }
+
+            // LOSE condition. if guessCount reaches guessLimit, the user loses
+            if (guessCount == guessLimit) {
+                document.querySelector("#result").innerHTML = "YOU LOSE";
+                if (guessLimit == 13) score--;
+                if (guessLimit == 7) score-=5;
+                if (guessLimit == 1) score-=10;
+                updateScore();
+                gameLock = true;
+            }
+        }
         
-        // userInput is not in the word guessCount goes up and the game could end
-        if (word.indexOf(userInput) == -1) {
-            guessCount++;
-            document.querySelector("#misses").innerHTML = "Misses: " + guessCount + "/" + guessLimit;
-            document.querySelector("#image").src = "assets/images/easy/clean/scaffold-" + guessCount + ".png";
+        //if userInput is in the word
+        // look through the word looking for each instance of the letter inputted.
+        for (var i = 0; i < word.length; i++) {
+            if (word[i] == userInput) indices.push(i);
         }
-
-        // LOSE condition. if guessCount reaches guessLimit, the user loses
-        if (guessCount == guessLimit) {
-            document.querySelector("#result").innerHTML = "YOU LOSE";
-            if (guessLimit == 13) score--;
-            if (guessLimit == 7) score-=5;
-            if (guessLimit == 1) score-=10;
-            updateScore();
-        }
-    }
-    
-    //if userInput is in the word
-    // look through the word looking for each instance of the letter inputted.
-    for (var i = 0; i < word.length; i++) {
-        if (word[i] == userInput) indices.push(i);
-    }
 
 //console.log(indices);
-    
-    // print the matching letters to the screen
-    if (indices.length > 0) {
-        for (i = 0; i < indices.length; i++) {
-            document.querySelector("#letter" + indices[i]).innerHTML = "  " + userInput + "  ";
+        
+        // print the matching letters to the screen
+        if (indices.length > 0) {
+            for (i = 0; i < indices.length; i++) {
+                document.querySelector("#letter" + indices[i]).innerHTML = "  " + userInput + "  ";
+            }
+
+            // clear indices before user inputs new letters.
+            indices = [];
         }
 
-        // clear indices before user inputs new letters.
-        indices = [];
-    }
-
-    //win condition. if user guesses all the letters in the word
-    var win = false;
-    var sum = 0;
-    var counter = 0;
+        //win condition. if user guesses all the letters in the word
+        var win = false;
+        var sum = 0;
+        var counter = 0;
 
 //console.log(word);
 
-    // loop through the array of user's choices looking for each letter of the word in that array
-    // if that letter is found increase sum
-    // if sum equals the number of letters in the word. player wins. todo: make it so player loses if he does not get this in enough tries
-    // to get out of loop, break loop after trying all the letters in user's choices
-    while (!win) {
-        if (choices.indexOf(word[counter]) >= 0) sum++;
+        // loop through the array of user's choices looking for each letter of the word in that array
+        // if that letter is found increase sum
+        // if sum equals the number of letters in the word. player wins. todo: make it so player loses if he does not get this in enough tries
+        // to get out of loop, break loop after trying all the letters in user's choices
+        while (!win) {
+            if (choices.indexOf(word[counter]) >= 0) sum++;
 //console.log(sum);
 
-        if (sum == word.length) {
-            win = true;
-            document.querySelector("#result").innerHTML = "YOU WIN";
-            document.querySelector("#definition").innerHTML =
-                "<span class='fa fa-quote-left'></span>" + "  " + dictionary[randNum].definition + "  " + 
-                "<span class='fa fa-quote-right'</span>";
+            if (sum == word.length) {
+                win = true;
+                document.querySelector("#result").innerHTML = "YOU WIN";
+                document.querySelector("#definition").innerHTML =
+                    "<span class='fa fa-quote-left'></span>" + "  " + dictionary[randNum].definition + "  " + 
+                    "<span class='fa fa-quote-right'</span>";
 
-            // the below if statements are for certain instances that load an iframe youtube video 
-            if (dictionary[randNum].definition == "shark") {
-                document.querySelector("#definition").innerHTML = "";
-                var location = document.querySelector("#definition");
-                var iFrame = document.createElement("iframe");
-                iFrame.src = "https://www.youtube.com/embed/1WJaqpi1PDg?autoplay=1";
-                iFrame.width = "400";
-                iFrame.height = "150";
-                iFrame.frameborder = "0";
-                location.appendChild(iFrame);
+                // the below if statements are for certain instances that load an iframe youtube video 
+                if (dictionary[randNum].word == "shark") {
+                    playVideo("https://www.youtube.com/embed/1WJaqpi1PDg?autoplay=1");
+                 }
+
+                if (dictionary[randNum].word == "horse") {
+                    playVideo("https://www.youtube.com/embed/b3_lVSrPB6w?autoplay=1");
+                }
+
+                if (dictionary[randNum].word == "paternal") {
+                    playVideo("https://www.youtube.com/embed/HseMjKYs4Ug?list=PL54856EB4DCF67FD6?autoplay=1");
+                }
+
+                if (dictionary[randNum].word == "math") {
+                    playVideo("https://www.youtube.com/embed/5joa2C0i20w?autoplay=1");
+                }
+
+                if (dictionary[randNum].word == "drama") {
+                    playVideo("https://www.youtube.com/embed/y8Kyi0WNg40?autoplay=1");
+                }
+
+                if (dictionary[randNum].word == "flight") {
+                    playVideo("https://www.youtube.com/embed/nG2rNBFzkGE?autoplay=1");
+                }
+
+                if (dictionary[randNum].word == "chill") {
+                    playVideo("https://www.youtube.com/embed/R39e30FL37U?autoplay=1");
+                }
+
+                if (dictionary[randNum].word == "caring") {
+                    playVideo("https://www.youtube.com/embed/PAqxWa9Rbe0?autoplay=1");
+                }
+
+                if (dictionary[randNum].word == "victory") {
+                    playVideo("https://www.youtube.com/embed/PZ_7ipJ6Cx8?autoplay=1");
+                }                
+
+                // increase the score based on the difficulty setting
+                if (guessLimit == 13) score++;
+                if (guessLimit == 7) score+=5;
+                if (guessLimit == 1) score+=10;
+                updateScore();
+                gameLock = true;
             }
-
-            if (dictionary[randNum].definition == "horse") {
-                document.querySelector("#definition").innerHTML = "";
-                var location = document.querySelector("#definition");
-                var iFrame = document.createElement("iframe");
-                iFrame.src = "https://www.youtube.com/embed/b3_lVSrPB6w?autoplay=1";
-                iFrame.width = "400";
-                iFrame.height = "150";
-                iFrame.frameborder = "0";
-                location.appendChild(iFrame);
-            }
-
-            if (dictionary[randNum].definition == "paternal") {
-                document.querySelector("#definition").innerHTML = "";
-                var location = document.querySelector("#definition");
-                var iFrame = document.createElement("iframe");
-                iFrame.src = "https://www.youtube.com/embed/HseMjKYs4Ug?list=PL54856EB4DCF67FD6?autoplay=1";
-                iFrame.width = "400";
-                iFrame.height = "150";
-                iFrame.frameborder = "0";
-                location.appendChild(iFrame);
-            }
-
-            if (dictionary[randNum].definition == "math") {
-                document.querySelector("#definition").innerHTML = "";
-                var location = document.querySelector("#definition");
-                var iFrame = document.createElement("iframe");
-                iFrame.src = "https://www.youtube.com/embed/5joa2C0i20w?autoplay=1";
-                iFrame.width = "400";
-                iFrame.height = "150";
-                iFrame.frameborder = "0";
-                location.appendChild(iFrame);
-            }
-
-            // increase the score based on the difficulty setting
-            if (guessLimit == 13) score++;
-            if (guessLimit == 7) score+=5;
-            if (guessLimit == 1) score+=10;
-            updateScore();
+            
+            if (counter == choices.length) break;
+            counter++;
         }
-        
-        if (counter == choices.length) break;
-        counter++;
     }
 }
 
@@ -238,13 +250,29 @@ function getWord() {
 // function sets up the number of blank spaces on the screen
 function setSpaces(string) {
     for (var i = 0; i < string.length; i++) {
-        document.querySelector("#wordSpace").innerHTML += ("<span id=letter" + i + ">_" + " " + "</span>");
+        document.querySelector("#wordSpace").innerHTML += "<span id=letter" + i + ">_" + " " + "</span>";
+        document.querySelector("#message").style.color = "white";
     }
 }
 
 // updates the score
 function updateScore() {
 	document.querySelector("#score").innerHTML = "Score: " + score;
+}
+
+function playVideo(link) {
+    var location = document.querySelector("#video");
+    var iFrame = document.createElement("iframe");
+    iFrame.src = link;
+    iFrame.width = "400";
+    iFrame.height = "250";
+    iFrame.frameborder = "0";
+    iFrame.style.position = "absolute";
+    iFrame.style.left = "595px";
+    iFrame.style.top = "155px";
+    location.appendChild(iFrame);
+    location.style.display = "block";
+
 }
 
 // resets multiple parameters necessary for a new game
@@ -255,10 +283,13 @@ function reset() {
     sum = 0;
     choices = [];
     indices = [];
+    gameLock = false;
     document.querySelector("#wordSpace").innerHTML = "";
     document.querySelector("#definition").innerHTML = "";
     document.querySelector("#result").innerHTML = "";
     document.querySelector("#used").innerHTML = "Used Letters: ";
     document.querySelector("#misses").innerHTML = "Misses: 0/" + guessLimit;
     document.querySelector("#image").src = "assets/images/easy/clean/scaffold-only.png";
+    document.querySelector("#video").innerHTML = "";
+
 }

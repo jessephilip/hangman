@@ -11,6 +11,12 @@ header {
 	font-family: "Press Start 2P";
 }
 
+#message {
+	font-family: "Press Start 2P";
+	text-align: center;
+	margin: 0;
+}
+
 #result {
 	font-size: 100px;
 }
@@ -23,7 +29,7 @@ header {
 aside {
 	position: fixed;
 	bottom: 10px;
-	left: 10px;
+	left: 60px;
 }
 
 article {
@@ -37,7 +43,6 @@ article button {
 	margin: 5px 0;
 }
 
-.inTheMiddle {
-	position: fixed;
-	margins: auto;
+#video {
+	display: none;
 }
