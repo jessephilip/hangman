@@ -1,5 +1,12 @@
-//todo: implement game lock for once game has ended
 //todo: instructions require game to start over automatically
+//todo: update picture progression depending on difficulty
+//todo: organize things in game object
+//todo: collector, other words don't always calculate accurately, figure out why (after missing letter, it marks win)
+    //properties of problem. collector has 2 sets of 2 letters
+
+var hangman = {
+    
+}
 
 var dictionary = [
     { word: "hello", definition: "salutation" },
@@ -32,7 +39,7 @@ var dictionary = [
     { word: "code", definition: "&uarr; &uarr; &darr; &darr; &larr; &rarr; &larr; &rarr; b a start" },
     { word: "shark", definition: "big fish with teeth" },
     { word: "horse", definition: "yelling too much" },
-    { word: "paternal", definition: "fondness for DNA donations" },
+    { word: "paternal", definition: "fondness of DNA donations" },
     { word: "math", definition: "2 + 2 = 5" },
     { word: "box", definition: "beware the most innerest" },
     { word: "drama", definition: "that class you took in high school" },
@@ -41,6 +48,7 @@ var dictionary = [
     { word: "caring", definition: "is sharing" },
     { word: "ignorance", definition: "rhymes with fignorance" },
     { word: "victory", definition: "rides on a white stallion" },
+    { word: "roommate", definition: "can I borrow your stuff" },
     { word: "roof", definition: "raise it" }
 
 ];
@@ -75,8 +83,12 @@ var score = 0;
 // variable for locking the game after the player wins or loses
 var gameLock = false;
 
-//initiage the game with a random word and the correct number of spaces
-setSpaces(getWord());
+// variable for locking buttons after play has begun
+var playing = false;
+
+//initiate the game with a random word and the correct number of spaces
+//setSpaces(getWord());
+newGame();
 
 // document.onkeyup listens for the user's input
 document.onkeyup = function(event) {
@@ -85,8 +97,8 @@ document.onkeyup = function(event) {
 
     if ((event.keyCode >= 65) && (event.keyCode <= 90) && (gameLock == false))  {
 
-        //turn color of #message black for style
-        document.querySelector("#message").style.color = "gray"; 
+    // insert disable here
+    playing = true;
 
         //return an alert and do not log the user input if it has already been attempted.
         if (choices.indexOf(userInput) >= 0) {
@@ -96,13 +108,18 @@ document.onkeyup = function(event) {
         //put user's input into an array and print that to the screen.
         else {
             choices.push(userInput);
+
+            // if the player has begun to play, disable the buttons
+            if (choices.length == 1) disable();
+            
             document.querySelector("#used").innerHTML = "Used Letters: " + choices.toString();
             
             // userInput is not in the word guessCount goes up and the game could end
             if (word.indexOf(userInput) == -1) {
                 guessCount++;
                 document.querySelector("#misses").innerHTML = "Misses: " + guessCount + "/" + guessLimit;
-                document.querySelector("#image").src = "assets/images/easy/clean/scaffold-" + guessCount + ".png";
+                if (guessLimit == 13) document.querySelector("#image").src = "assets/images/easy/clean/scaffold-" + guessCount + ".png";
+                if (guessLimit == 1) document.querySelector("#image").src = "assets/images/easy/clean/scaffold-13.png";
             }
 
             // LOSE condition. if guessCount reaches guessLimit, the user loses
@@ -112,7 +129,11 @@ document.onkeyup = function(event) {
                 if (guessLimit == 7) score-=5;
                 if (guessLimit == 1) score-=10;
                 updateScore();
+                
+                // player is no longer playing so enable buttons and disable letter input until new game begins
                 gameLock = true;
+                playing = false;
+                enable();
             }
         }
         
@@ -166,7 +187,7 @@ document.onkeyup = function(event) {
                 }
 
                 if (dictionary[randNum].word == "paternal") {
-                    playVideo("https://www.youtube.com/embed/HseMjKYs4Ug?list=PL54856EB4DCF67FD6?autoplay=1");
+                    playVideo("https://www.youtube.com/embed/HseMjKYs4Ug?autoplay=1");
                 }
 
                 if (dictionary[randNum].word == "math") {
@@ -191,14 +212,24 @@ document.onkeyup = function(event) {
 
                 if (dictionary[randNum].word == "victory") {
                     playVideo("https://www.youtube.com/embed/PZ_7ipJ6Cx8?autoplay=1");
-                }                
+                }
+
+                if (dictionary[randNum].word == "roommate") {
+                    playVideo("https://www.youtube.com/embed/UoUEQYjYgf4sss?autoplay=1");
+                }
+
+                //<iframe width="560" height="315" src="https://www.youtube.com/embed/UoUEQYjYgf4" frameborder="0" allowfullscreen></iframe>                
 
                 // increase the score based on the difficulty setting
                 if (guessLimit == 13) score++;
                 if (guessLimit == 7) score+=5;
                 if (guessLimit == 1) score+=10;
                 updateScore();
+                
+                // player is no longer playing so enable buttons and disable letter input until new game begins
                 gameLock = true;
+                playing = false;
+                enable();
             }
             
             if (counter == choices.length) break;
@@ -210,33 +241,37 @@ document.onkeyup = function(event) {
 
 // Click listener to start a new game.
 document.querySelector("#button").addEventListener("click", function() {
-    //figure this part out
-    reset();
-    setSpaces(getWord());
+    if (gameLock == true || choices.length == 0) {
+        reset();
+        setSpaces(getWord());
+    }
 });
 
 // click listener for easy mode
 document.querySelector("#easy").addEventListener("click", function() {
-    //figure this part out
-    guessLimit = 13;
-    reset();
-    setSpaces(getWord());
+    if (gameLock == true || choices.length == 0) {
+        guessLimit = 13;
+        reset();
+        setSpaces(getWord());
+    }
 });
 
 // click listener for hard mode
 document.querySelector("#hard").addEventListener("click", function() {
-    //figure this part out
-    guessLimit = 7;
-    reset();
-    setSpaces(getWord());
+    if (gameLock == true || choices.length == 0) {
+        guessLimit = 7;
+        reset();
+        setSpaces(getWord());
+    }
 });
 
 // click listener for sudden-death mode
 document.querySelector("#sudden-death").addEventListener("click", function() {
-    //figure this part out
-    guessLimit = 1;
-    reset();    
-    setSpaces(getWord());
+    if (gameLock == true || choices.length == 0) {
+        guessLimit = 1;
+        reset();    
+        setSpaces(getWord());
+    }   
 });
 
 // function generates and returns random word from dictionary
@@ -284,6 +319,9 @@ function reset() {
     choices = [];
     indices = [];
     gameLock = false;
+    playing = false;
+    word = "";
+    randNum = 0;
     document.querySelector("#wordSpace").innerHTML = "";
     document.querySelector("#definition").innerHTML = "";
     document.querySelector("#result").innerHTML = "";
@@ -291,5 +329,33 @@ function reset() {
     document.querySelector("#misses").innerHTML = "Misses: 0/" + guessLimit;
     document.querySelector("#image").src = "assets/images/easy/clean/scaffold-only.png";
     document.querySelector("#video").innerHTML = "";
+
+}
+
+//disable new game and difficulty buttons while game is playing
+function disable() {
+    if (playing == true) {
+        document.querySelector("#message").style.color = "gray";
+        document.querySelector("#message").innerHTML = "Game in play";
+        document.querySelector(".btn-success").setAttribute("disabled", "disabled");
+        document.querySelector(".btn-primary").setAttribute("disabled", "disabled");
+        document.querySelector(".btn-warning").setAttribute("disabled", "disabled");
+        document.querySelector(".btn-danger").setAttribute("disabled", "disabled");
+    }
+}
+
+function enable() {
+    document.querySelector("#message").style.color = "white";
+    document.querySelector("#message").innerHTML = "Press any letter to start";
+    document.getElementsByClassName(".btn").disabled = false;
+    document.querySelector(".btn-success").removeAttribute("disabled");
+    document.querySelector(".btn-primary").removeAttribute("disabled");
+    document.querySelector(".btn-warning").removeAttribute("disabled");
+    document.querySelector(".btn-danger").removeAttribute("disabled");
+}
+
+function newGame() {
+    reset();
+    setSpaces(getWord());
 
 }
