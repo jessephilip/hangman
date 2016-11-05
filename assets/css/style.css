@@ -8,11 +8,11 @@ header {
 
 #title {
 	padding: 0;
-	font-family: "Press Start 2P";
+	font-family: "Press Start 2P", courier;
 }
 
 #message {
-	font-family: "Press Start 2P";
+	font-family: "Press Start 2P", courier;
 	text-align: center;
 	margin: 0;
 }

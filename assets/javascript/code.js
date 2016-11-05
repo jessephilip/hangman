@@ -1,12 +1,4 @@
-//todo: instructions require game to start over automatically
 //todo: update picture progression depending on difficulty
-//todo: organize things in game object
-//todo: collector, other words don't always calculate accurately, figure out why (after missing letter, it marks win)
-    //properties of problem. collector has 2 sets of 2 letters
-
-var hangman = {
-    
-}
 
 var dictionary = [
     { word: "hello", definition: "salutation" },
@@ -87,7 +79,6 @@ var gameLock = false;
 var playing = false;
 
 //initiate the game with a random word and the correct number of spaces
-//setSpaces(getWord());
 newGame();
 
 // document.onkeyup listens for the user's input
@@ -103,6 +94,7 @@ document.onkeyup = function(event) {
         //return an alert and do not log the user input if it has already been attempted.
         if (choices.indexOf(userInput) >= 0) {
             alert("Letter already used.");
+
         }
 
         //put user's input into an array and print that to the screen.
@@ -119,6 +111,32 @@ document.onkeyup = function(event) {
                 guessCount++;
                 document.querySelector("#misses").innerHTML = "Misses: " + guessCount + "/" + guessLimit;
                 if (guessLimit == 13) document.querySelector("#image").src = "assets/images/easy/clean/scaffold-" + guessCount + ".png";
+                if (guessLimit == 7) {
+                    switch (guessCount) {
+                        case 1:
+                            document.querySelector("#image").src = "assets/images/easy/clean/scaffold-1.png";
+                            break;
+                        case 2:
+                            document.querySelector("#image").src = "assets/images/easy/clean/scaffold-2.png";
+                            break;
+                        case 3:
+                            document.querySelector("#image").src = "assets/images/easy/clean/scaffold-6.png";
+                            break;
+                        case 4:
+                            document.querySelector("#image").src = "assets/images/easy/clean/scaffold-10.png";
+                            break;
+                        case 5:
+                            document.querySelector("#image").src = "assets/images/easy/clean/scaffold-11.png";
+                            break;
+                        case 6:
+                            document.querySelector("#image").src = "assets/images/easy/clean/scaffold-12.png";
+                            break;
+                        case 7:
+                            document.querySelector("#image").src = "assets/images/easy/clean/scaffold-13.png";
+                            break;
+                    }
+                }
+
                 if (guessLimit == 1) document.querySelector("#image").src = "assets/images/easy/clean/scaffold-13.png";
             }
 
@@ -155,7 +173,7 @@ document.onkeyup = function(event) {
             indices = [];
         }
 
-        //win condition. if user guesses all the letters in the word
+        //WIN condition. if user guesses all the letters in the word
         var win = false;
         var sum = 0;
         var counter = 0;
@@ -217,8 +235,6 @@ document.onkeyup = function(event) {
                 if (dictionary[randNum].word == "roommate") {
                     playVideo("https://www.youtube.com/embed/UoUEQYjYgf4sss?autoplay=1");
                 }
-
-                //<iframe width="560" height="315" src="https://www.youtube.com/embed/UoUEQYjYgf4" frameborder="0" allowfullscreen></iframe>                
 
                 // increase the score based on the difficulty setting
                 if (guessLimit == 13) score++;
@@ -344,9 +360,10 @@ function disable() {
     }
 }
 
+//enable new game and difficulty buttons while game is playing
 function enable() {
     document.querySelector("#message").style.color = "white";
-    document.querySelector("#message").innerHTML = "Press any letter to start";
+    document.querySelector("#message").innerHTML = "Press a button to start";
     document.getElementsByClassName(".btn").disabled = false;
     document.querySelector(".btn-success").removeAttribute("disabled");
     document.querySelector(".btn-primary").removeAttribute("disabled");
@@ -354,6 +371,7 @@ function enable() {
     document.querySelector(".btn-danger").removeAttribute("disabled");
 }
 
+// start new game by resetting values and setting empty spaces
 function newGame() {
     reset();
     setSpaces(getWord());

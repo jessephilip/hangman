@@ -1,79 +1,64 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Hangman Game</title>
-
-	<!-- Google Fonts -->
-	<link href="https://fonts.googleapis.com/css?family=Amatic+SC|Share+Tech+Mono" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-
-	<!-- Font Awesome -->
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
-	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/css/bootstrap-flex.css">
-
-	<!-- Custom CSS -->
-	<link rel="stylesheet" href="assets/css/style.css">
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hangman Game</title>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/ico.ico" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC|Share+Tech+Mono" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.5/css/bootstrap-flex.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
-	<div class="container">
-		<header class="row">
-			<h1 id="title" class="col-md-6">Hangman Game</h1>
-
-				<!-- <img id="image" class="img-responsive" src="assets/images/tv.png" alt="TV"> -->
-				<img id="image" class="col-md-6 img-responsive" src="assets/images/easy/clean/scaffold-only.png" alt="scaffold only 0/13">
-
-
-		</header>
-		<section class="row">
-			<h3 id="wordSpace" class="col-md-6"></h3>
-			<div class="col-md-6"></div>
-
-		</section>
-
-		<section class="row">
-			<h5 id="used">Used Letters: </h5>
-			<br>
-		</section>
-
-		<section class="row">
-			<h5 id="score">Score: 0</h5>
-			<br>
-		</section>
-
-		<section class="row">
-			<h5 id="misses">Misses: 0/13</h5>
-			<br>
-		</section>
-
-		<section class="row">
-			<h5 id="result"></h5>
-			<br>
-			<br>
-		</section>
-		<section class="row">
-			<h5 id="definition"></h5>
-		</section>	
-		
-	</div>
-
-	<aside>
-		<article>
-			<p id="message">Press any letter to start</p>
-			<button id="button" class="btn btn-success">New Word</button>
-			<button id="easy" class="btn btn-primary">Easy</button>
-			<button id="hard" class="btn btn-warning">Hard</button>
-			<button id="sudden-death" class="btn btn-danger">Sudden Death</button>
-		</article>
-	</aside>
-
-	<div id="video"></div>
-
-	<script type="text/javascript" src="assets/javascript/code.js"></script>
-
+    <div class="container">
+        <header class="row">
+            <h1 id="title" class="col-md-6">Hangman Game</h1>
+            <img id="image" class="col-md-6 img-responsive" src="assets/images/easy/clean/scaffold-only.png" alt="scaffold only 0/13">
+        </header>
+        <section class="row">
+            <h3 id="wordSpace" class="col-md-6"></h3>
+            <div class="col-md-6"></div>
+        </section>
+        <section class="row">
+            <h5 id="used">Used Letters: </h5>
+            <br>
+        </section>
+        <section class="row">
+            <h5 id="score">Score: 0</h5>
+            <br>
+        </section>
+        <section class="row">
+            <h5 id="misses">Misses: 0/13</h5>
+            <br>
+        </section>
+        <section class="row">
+            <h5 id="result"></h5>
+            <br>
+            <br>
+        </section>
+        <section class="row">
+            <h5 id="definition"></h5>
+        </section>
+    </div>
+    <aside>
+        <article>
+            <p id="message">Press any letter to start</p>
+            <button id="button" class="btn btn-success">New Word</button>
+            <button id="easy" class="btn btn-primary">Easy</button>
+            <button id="hard" class="btn btn-warning">Hard</button>
+            <button id="sudden-death" class="btn btn-danger">Sudden Death</button>
+        </article>
+    </aside>
+    <div id="video"></div>
+    <script type="text/javascript" src="assets/javascript/code.js"></script>
 </body>
+
 </html>
