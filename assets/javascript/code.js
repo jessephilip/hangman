@@ -258,8 +258,7 @@ document.onkeyup = function(event) {
 // Click listener to start a new game.
 document.querySelector("#button").addEventListener("click", function() {
     if (gameLock == true || choices.length == 0) {
-        reset();
-        setSpaces(getWord());
+        newGame();
     }
 });
 
@@ -267,8 +266,7 @@ document.querySelector("#button").addEventListener("click", function() {
 document.querySelector("#easy").addEventListener("click", function() {
     if (gameLock == true || choices.length == 0) {
         guessLimit = 13;
-        reset();
-        setSpaces(getWord());
+        newGame();
     }
 });
 
@@ -276,8 +274,7 @@ document.querySelector("#easy").addEventListener("click", function() {
 document.querySelector("#hard").addEventListener("click", function() {
     if (gameLock == true || choices.length == 0) {
         guessLimit = 7;
-        reset();
-        setSpaces(getWord());
+        newGame();
     }
 });
 
@@ -285,8 +282,7 @@ document.querySelector("#hard").addEventListener("click", function() {
 document.querySelector("#sudden-death").addEventListener("click", function() {
     if (gameLock == true || choices.length == 0) {
         guessLimit = 1;
-        reset();    
-        setSpaces(getWord());
+        newGame();
     }   
 });
 
@@ -375,5 +371,6 @@ function enable() {
 function newGame() {
     reset();
     setSpaces(getWord());
+    document.querySelector("#message").innerHTML = "Press any letter to start"
 
 }
