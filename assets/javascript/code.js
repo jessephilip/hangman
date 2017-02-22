@@ -93,7 +93,7 @@ document.onkeyup = function(event) {
 
         //return an alert and do not log the user input if it has already been attempted.
         if (choices.indexOf(userInput) >= 0) {
-            alert("Letter already used.");
+            alertify.alert("Oh no!!!", '"' + userInput + '"' + " already used.");
 
         }
 
@@ -103,9 +103,9 @@ document.onkeyup = function(event) {
 
             // if the player has begun to play, disable the buttons
             if (choices.length == 1) disable();
-            
+
             document.querySelector("#used").innerHTML = "Used Letters: " + choices.toString();
-            
+
             // userInput is not in the word guessCount goes up and the game could end
             if (word.indexOf(userInput) == -1) {
                 guessCount++;
@@ -147,14 +147,14 @@ document.onkeyup = function(event) {
                 if (guessLimit == 7) score-=5;
                 if (guessLimit == 1) score-=10;
                 updateScore();
-                
+
                 // player is no longer playing so enable buttons and disable letter input until new game begins
                 gameLock = true;
                 playing = false;
                 enable();
             }
         }
-        
+
         //if userInput is in the word
         // look through the word looking for each instance of the letter inputted.
         for (var i = 0; i < word.length; i++) {
@@ -162,7 +162,7 @@ document.onkeyup = function(event) {
         }
 
 //console.log(indices);
-        
+
         // print the matching letters to the screen
         if (indices.length > 0) {
             for (i = 0; i < indices.length; i++) {
@@ -192,10 +192,10 @@ document.onkeyup = function(event) {
                 win = true;
                 document.querySelector("#result").innerHTML = "YOU WIN";
                 document.querySelector("#definition").innerHTML =
-                    "<span class='fa fa-quote-left'></span>" + "  " + dictionary[randNum].definition + "  " + 
+                    "<span class='fa fa-quote-left'></span>" + "  " + dictionary[randNum].definition + "  " +
                     "<span class='fa fa-quote-right'</span>";
 
-                // the below if statements are for certain instances that load an iframe youtube video 
+                // the below if statements are for certain instances that load an iframe youtube video
                 if (dictionary[randNum].word == "shark") {
                     playVideo("https://www.youtube.com/embed/1WJaqpi1PDg?autoplay=1");
                  }
@@ -232,22 +232,18 @@ document.onkeyup = function(event) {
                     playVideo("https://www.youtube.com/embed/PZ_7ipJ6Cx8?autoplay=1");
                 }
 
-                if (dictionary[randNum].word == "roommate") {
-                    playVideo("https://www.youtube.com/embed/UoUEQYjYgf4sss?autoplay=1");
-                }
-
                 // increase the score based on the difficulty setting
                 if (guessLimit == 13) score++;
                 if (guessLimit == 7) score+=5;
                 if (guessLimit == 1) score+=10;
                 updateScore();
-                
+
                 // player is no longer playing so enable buttons and disable letter input until new game begins
                 gameLock = true;
                 playing = false;
                 enable();
             }
-            
+
             if (counter == choices.length) break;
             counter++;
         }
@@ -283,14 +279,14 @@ document.querySelector("#sudden-death").addEventListener("click", function() {
     if (gameLock == true || choices.length == 0) {
         guessLimit = 1;
         newGame();
-    }   
+    }
 });
 
 // function generates and returns random word from dictionary
 function getWord() {
     randNum = Math.floor(Math.random() * dictionary.length);
     word = dictionary[randNum].word;
-    console.log(word);
+    // console.log(word);
     return word;
 }
 
